@@ -62,6 +62,22 @@ We use ESLint and Prettier to ensure consistent code style and formatting. Pleas
    - Click on the "New pull request" button.
    - Select your feature branch and submit the pull request.
 
+### Writing Unit Tests and Documentation
+
+- **Unit Tests:** Write unit tests for any new functionality or changes to existing functionality. Ensure that all tests pass before submitting your pull request.
+- **Documentation:** Add comments and documentation to improve code readability and maintainability. Follow the project's documentation guidelines.
+
+### Running Tests and Linting the Code
+
+- **Running Tests:** To run the tests, use the following command:
+  ```sh
+  npm run test
+  ```
+- **Linting the Code:** To lint the code, use the following command:
+  ```sh
+  npm run lint
+  ```
+
 ### Code of Conduct
 
 Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project, you agree to abide by its terms.
