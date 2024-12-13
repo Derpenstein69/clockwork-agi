@@ -41,6 +41,9 @@ export default function SimpleImageGenerator() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [appliedFilter, setAppliedFilter] = useState<string>("")
+  const [searchQuery, setSearchQuery] = useState<string>("")
+  const [currentPage, setCurrentPage] = useState<number>(1)
+  const [imagesPerPage] = useState<number>(9)
 
   useEffect(() => {
     fetch("/api/models")
@@ -104,6 +107,14 @@ export default function SimpleImageGenerator() {
     setAppliedFilter(filter)
   }
 
+  const filteredImages = generatedImages.filter(image => image.toLowerCase().includes(searchQuery.toLowerCase()))
+
+  const indexOfLastImage = currentPage * imagesPerPage
+  const indexOfFirstImage = indexOfLastImage - imagesPerPage
+  const currentImages = filteredImages.slice(indexOfFirstImage, indexOfLastImage)
+
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber)
+
   return (
     <div className="min-h-screen block md:flex">
       <div className="w-full md:w-1/2 block md:flex flex-col md:h-screen">
@@ -156,12 +167,19 @@ export default function SimpleImageGenerator() {
         </div>
       </div>
       <div className="w-full md:w-1/2 block md:flex flex-col items-center justify-center p-4 bg-gray-50">
+        <input
+          type="text"
+          placeholder="Search images..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="p-2 border rounded mb-4"
+        />
         {isLoading ? (
           <Loader2 className="h-16 w-16 animate-spin" />
-        ) : generatedImages.length > 0 ? (
+        ) : currentImages.length > 0 ? (
           <>
             <Carousel>
-              {generatedImages.map((image, index) => (
+              {currentImages.map((image, index) => (
                 <div key={index} onClick={() => handleImageClick(image)}>
                   <Image src={image} alt={`Generated ${index}`} className={`w-full h-auto rounded-lg shadow-lg mb-4 ${appliedFilter}`} />
                 </div>
@@ -170,6 +188,17 @@ export default function SimpleImageGenerator() {
             <Button onClick={() => handleDownload(selectedImage!)} className="mt-4">
               <Download className="mr-2 h-4 w-4" /> Download Image
             </Button>
+            <div className="flex justify-center space-x-2 mt-4">
+              {Array.from({ length: Math.ceil(filteredImages.length / imagesPerPage) }, (_, index) => (
+                <button
+                  key={index + 1}
+                  onClick={() => paginate(index + 1)}
+                  className={`px-4 py-2 border rounded ${currentPage === index + 1 ? 'bg-blue-500 text-white' : 'bg-white text-black'}`}
+                >
+                  {index + 1}
+                </button>
+              ))}
+            </div>
           </>
         ) : (
           <div className="text-center text-gray-500">Your generated image will appear here</div>
