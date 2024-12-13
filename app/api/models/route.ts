@@ -35,14 +35,17 @@ export async function GET(request: Request) {
       }), { status: 401, headers: { 'Content-Type': 'application/json' } });
     }
 
+    // Initialize the Cloudflare client with the provided API token
     const client = new Cloudflare({
       apiToken: CLOUDFLARE_API_TOKEN,
     });
 
+    // Fetch the list of AI models available in the Cloudflare account
     const models = await client.workers.ai.models.list({
       account_id,
     });
 
+    // Filter the models to include only those that are compatible
     const compatibleModels = models.filter((model: any) => {
       // Add compatibility check logic here
       return true; // Placeholder, assume all models are compatible for now

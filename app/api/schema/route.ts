@@ -45,6 +45,7 @@ export async function GET(request: NextRequest) {
       }), { status: 401, headers: { 'Content-Type': 'application/json' } });
     }
 
+    // Initialize the Cloudflare client with the provided API token
     const client = new Cloudflare({
       apiToken: CLOUDFLARE_API_TOKEN,
     });
