@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Toggle } from '@/components/ui/toggle';
+import Cookies from 'js-cookie';
 
 const DarkModeToggle = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
-    const savedPreference = localStorage.getItem('darkMode');
+    const savedPreference = Cookies.get('darkMode');
     if (savedPreference) {
       setIsDarkMode(savedPreference === 'true');
       document.documentElement.classList.toggle('dark', savedPreference === 'true');
@@ -15,7 +16,7 @@ const DarkModeToggle = () => {
   const handleToggle = () => {
     setIsDarkMode(!isDarkMode);
     document.documentElement.classList.toggle('dark', !isDarkMode);
-    localStorage.setItem('darkMode', (!isDarkMode).toString());
+    Cookies.set('darkMode', (!isDarkMode).toString());
   };
 
   return (
@@ -23,6 +24,8 @@ const DarkModeToggle = () => {
       checked={isDarkMode}
       onCheckedChange={handleToggle}
       aria-label="Toggle dark mode"
+      title="Toggle between light and dark modes"
+      className="transition-colors duration-300 ease-in-out"
     >
       {isDarkMode ? '🌙' : '☀️'}
     </Toggle>
